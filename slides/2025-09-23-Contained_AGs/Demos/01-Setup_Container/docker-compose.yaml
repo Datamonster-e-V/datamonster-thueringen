@@ -1,0 +1,48 @@
+name: mssql_ag
+services:
+  sql1:
+    container_name: sql1
+    hostname: sql1
+    build:
+      context: .
+      dockerfile: dockerfile
+    restart: always
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Start123"
+    networks:
+      - mssql_ag
+    ports:
+      - 1433:1433
+      - 1435:1435
+    deploy:
+      resources:
+        limits:
+          cpus: 2
+          memory: 4G
+
+  sql2:
+    container_name: sql2
+    hostname: sql2
+    build:
+      context: .
+      dockerfile: dockerfile
+    restart: always
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Start123"
+    networks:
+      - mssql_ag
+    ports:
+      - 1443:1433
+      - 1445:1435
+    deploy:
+      resources:
+        limits:
+          cpus: 2
+          memory: 4G
+
+networks:
+  mssql_ag:
+    name: mssql_ag
+    driver: bridge

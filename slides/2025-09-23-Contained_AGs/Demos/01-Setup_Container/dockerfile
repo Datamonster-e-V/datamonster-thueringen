@@ -1,0 +1,21 @@
+FROM mcr.microsoft.com/mssql/server:2022-latest
+
+USER root
+
+#Configure SQL Server
+RUN  /opt/mssql/bin/mssql-conf set hadr.hadrenabled 1
+RUN  /opt/mssql/bin/mssql-conf set sqlagent.enabled true
+RUN  /opt/mssql/bin/mssql-conf set memory.memorylimitmb 3072
+
+RUN mkdir -p /var/opt/mssql/secrets/
+COPY machine-key /var/opt/mssql/secrets/
+RUN chown mssql:mssql /var/opt/mssql/secrets/machine-key
+RUN chmod 400 /var/opt/mssql/secrets/machine-key
+
+# Expose ports
+EXPOSE 1433 1435
+
+USER mssql
+
+# Run SQL Server process
+CMD ["/opt/mssql/bin/sqlservr"]

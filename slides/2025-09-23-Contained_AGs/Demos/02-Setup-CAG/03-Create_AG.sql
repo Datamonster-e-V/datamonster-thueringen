@@ -1,0 +1,21 @@
+CREATE AVAILABILITY GROUP [ag1]
+      WITH (DB_FAILOVER = ON, CLUSTER_TYPE = EXTERNAL, CONTAINED)
+      FOR REPLICA ON
+         N'sql1'
+               WITH (
+            ENDPOINT_URL = N'tcp://sql1:5022',
+            AVAILABILITY_MODE = SYNCHRONOUS_COMMIT,
+            FAILOVER_MODE = EXTERNAL,
+            SEEDING_MODE = AUTOMATIC
+            ),
+         N'sql2'
+         WITH (
+            ENDPOINT_URL = N'tcp://sql2:5022',
+            AVAILABILITY_MODE = SYNCHRONOUS_COMMIT,
+            FAILOVER_MODE = EXTERNAL,
+            SEEDING_MODE = AUTOMATIC
+            );
+
+ALTER AVAILABILITY GROUP [ag1] GRANT CREATE ANY DATABASE;
+GO
+
